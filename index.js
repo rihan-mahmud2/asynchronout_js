@@ -1,38 +1,23 @@
-/**
- * find user by userName
- * find posts by postId
- * find latest post
- * find comments by postId
- * find latest comment
- * find userName of last commented user
- *
- *
- * users?{userName}
- * posts?{userId}
- * comments?{postId}
- * users?{userName}
- *
- *
- */
+const isResolved = true;
 
-//callback hell
+const promise = new Promise((resolve, reject) => {
+  if (isResolved) {
+    resolve("Resolved");
+  } else {
+    reject("Not fullfilled");
+  }
+});
 
-function get(path, cb) {
-  const data = {};
-  cb(data);
-}
+console.log(promise);
 
-function getUserNameFromComment(userName) {
-  get(`/users?${userName}`, (user) => {
-    get(`/posts?userId${user?.id}`, (posts) => {
-      get(`/comments?postId=${posts[0]?.id}`, (comments) => {
-        get(`/users?commentId=${comments[0].id}`, (user) => {
-          console.log(user);
-        });
-      });
-    });
+promise
+  .catch((e) => {
+    console.log("Rejected");
+    console.log(e);
+  })
+  .then((data) => {
+    console.log(data);
   });
-}
 
-getUserNameFromComment("rihan");
-// next branch
+Promise.resolve();
+Promise.reject();
