@@ -1,37 +1,62 @@
-/**
- * find user by userName
- * find posts by postId
- * find latest post
- * find comments by postId
- * find latest comment
- * find userName of last commented user
- *
- *
- * users?{userName}
- * posts?{userId}
- * comments?{postId}
- * users?{userName}
- *
- *
- */
+const isResolved = true;
 
-//callback hell
+const promise = new Promise((resolve, reject) => {
+  if (isResolved) {
+    resolve("Resolved");
+  } else {
+    reject("Not fullfilled");
+  }
+});
 
-function get(path, cb) {
-  const data = {};
-  cb(data);
-}
+console.log(promise);
 
-function getUserNameFromComment(userName) {
-  get(`/users?${userName}`, (user) => {
-    get(`/posts?userId${user?.id}`, (posts) => {
-      get(`/comments?postId=${posts[0]?.id}`, (comments) => {
-        get(`/users?commentId=${comments[0].id}`, (user) => {
-          console.log(user);
-        });
-      });
-    });
+promise
+  .catch((e) => {
+    console.log("Rejected");
+    console.log(e);
+  })
+  .then((data) => {
+    console.log(data);
   });
-}
 
-getUserNameFromComment("rihan");
+// promise implementation
+
+// function wait(ms) {
+//   const promise = new Promise((resolve) => {
+//     setTimeout(resolve, ms);
+//   });
+//   return promise;
+// }
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+wait(1000).then(() => {
+  console.log("Done in 1000ms");
+});
+wait(2000).then(() => {
+  console.log("Done in 2000ms");
+});
+wait(3000).then(() => {
+  console.log("Done in 3000ms");
+});
+
+const get = (url) => Promise.resolve();
+
+get(`users?userName=rihan`)
+  .then((user) => {
+    return get(`posts?userId=${user.id}`);
+  })
+  .then((posts) => {
+    const latestPost = posts[0];
+    return get(`comments?postId=${latestPost.id}`);
+  })
+  .then((comments) => {
+    const latestComment = comments[0];
+    return get(`user?commentId=${latestComment.id}`);
+  })
+  .then((user) => {
+    console.log(user);
+  })
+  .catch((e) => {
+    console.log("Error");
+  });
